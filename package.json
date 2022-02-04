@@ -1,0 +1,21 @@
+{
+    "name": "nology-dashboard",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "dev": "npx nodemon server/server.js -w server"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "express": "^4.17.2",
+        "mysql": "^2.18.1",
+        "mysql2": "^2.3.3",
+        "node-fetch": "^2.0.0",
+        "nodemon": "^2.0.15",
+        "request": "^2.81.0",
+        "sequelize": "^6.15.0"
+    }
+}
