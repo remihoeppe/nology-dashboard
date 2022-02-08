@@ -11,7 +11,6 @@ app.use(express.json());
 app.use("/api/students", students);
 app.use("/api/cohorts", cohorts);
 
-console.log(accounts);
 app.use("/api/accounts", accounts);
 
 app.listen(process.env.PORT || "3000", () => {

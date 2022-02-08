@@ -16,5 +16,6 @@ const Student = db.define("student", {
 });
 
 Student.Accounts = Student.hasMany(Account);
+Account.belongsTo(Student);
 
 module.exports = Student;

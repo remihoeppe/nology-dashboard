@@ -4,7 +4,40 @@ const router = express.Router();
 const db = require("./../configs/db");
 const request = require("request");
 const Account = require("./../models/Account");
+const Student = require("../models/Student");
 const { response } = require("express");
+const getCodeWarsScore = require("./../utils/codewars");
+const getHackerRankScore = require("./../utils/hackerranks");
+
+//READ - get SCORE for ONE account
+router.get(
+    "/score/cohorts/:cohortId/platform/:platform",
+    async (request, response) => {
+        // Joining Students and Accounts tables
+        // returning all students for a single cohort and for a given platform;
+
+        const studentsInfo = await Student.findAll({
+            where: {
+                cohortId: request.params.cohortId,
+            },
+            include: [
+                {
+                    model: Account,
+                    required: true,
+                    where: { platform: request.params.platform },
+                },
+            ],
+        });
+
+        if (request.params.platform.toLowerCase() === "codewars") {
+            return getCodeWarsScore(response, studentsInfo);
+        } else if (request.params.platform.toLowerCase() === "hackerranks") {
+            return getHackerRankScore(response, studentsInfo);
+        } else {
+            return response.json("This platform is not YET supported");
+        }
+    },
+);
 
 // CREATE - add ONE account to the table
 router.post("/", async (request, response) => {
@@ -42,29 +75,6 @@ router.get("/:id", async (request, response) => {
         return response.sendStatus(404);
     }
     response.json(res[0]);
-});
-
-// READ - utils method to get score with username
-// const getScore = (username) => {
-//     return request(
-//         `https://www.codewars.com/api/v1/users/${username}`,
-//         { json: true },
-//         (err, response, body) => {
-//             if (err) {
-//                 return console.log(err);
-//             }
-//             const data = response.json();
-//             return data;
-//         },
-//     );
-// };
-
-//READ - get SCORE for ONE account
-router.get("/score", async (request, response) => {
-    const apiURL = `https://www.codewars.com/api/v1/users/rhoeppe`;
-    const fetch_response = await fetch(apiURL);
-    const json = await fetch_response.json();
-    response.json(json);
 });
 
 // READ - gets ALL accounts with studentId
